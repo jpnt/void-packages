@@ -1,0 +1,24 @@
+# Template file for 'trivy'
+pkgname=trivy
+version=0.61.0
+revision=1
+build_style=go
+build_helper=qemu
+go_import_path="github.com/aquasecurity/trivy"
+go_package="${go_import_path}/cmd/${pkgname}"
+go_ldflags="-X github.com/aquasecurity/trivy/pkg/version/app.ver=$version"
+short_desc="Simple and comprehensive vulnerability scanner for containers"
+maintainer="Orphaned <orphan@voidlinux.org>"
+license="Apache-2.0"
+homepage="https://github.com/aquasecurity/trivy"
+distfiles="${homepage}/archive/refs/tags/v${version}.tar.gz"
+checksum=1e97b1b67a4c3aee9c567534e60355033a58ce43a3705bdf198d7449d53b6979
+
+post_install() {
+	trivy="${DESTDIR}/usr/bin/trivy"
+	for shell in bash fish zsh; do
+		vtargetrun ${trivy} completion ${shell} >trivy.${shell}
+		vcompletion trivy.${shell} ${shell}
+	done
+	vlicense LICENSE
+}
